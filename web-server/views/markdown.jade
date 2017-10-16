@@ -2,6 +2,9 @@ extends layout
 
 block content
   ul.markdown-page-options.list-inline
+    if moduleName
+      li
+        a(href=feedbackUrl) Give Feedback
     li
       a(href=sourceUrl target="_blank") View On GitHub
     li

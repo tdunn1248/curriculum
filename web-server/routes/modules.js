@@ -38,6 +38,12 @@ module.exports = app => {
     response.renderMarkdownFile(`/modules/${moduleName}/README.md`)
   })
 
+  app.get('/modules/:moduleName/feedback', (request, response, next) => {
+    // console.log('this is our response:::', response.locals)
+    const { moduleName } = request.params
+    response.render('module_feedback', {moduleName})
+  })
+
   app.get('/modules/:moduleName/*', (request, response, next) => {
     response.renderFile(request.path)
   })

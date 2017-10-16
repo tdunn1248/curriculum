@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .feedback-container
+    h3 #{moduleName.replace(/-/g, ' ')}
+    form.form-group(action="/modules/#{moduleName}" method="POST")
+      textarea.form-control.feedback-textarea(rows="10" required)
+      br
+      button.btn.btn-primary(type="submit") Submit
+      br
+  h3 recent feedback
+  ul 
