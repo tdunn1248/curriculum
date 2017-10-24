@@ -54,9 +54,16 @@ const arrayToMapBySkillId = skillChecks => {
   return skillCheckedMap
 }
 
+const getAllModuleFeedback = (moduleName) =>
+  knex
+    .select('*')
+    .from('module_feedback')
+    .where('module_name', moduleName)
+
 module.exports = {
   getCheckedSkills,
   getSkillCheckLogs,
+  getChecksForUserAndLabels,
+  getCheckLogsForUsers,
+  getAllModuleFeedback
 }
-
-

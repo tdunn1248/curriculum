@@ -1,4 +1,9 @@
 const queries = require('../../database/queries')
+const commands = require('../../database/commands')
+const bodyParser = require('body-parser')
+const { createUserReviews, authorizeDelete, getModuleFeedBack } = require('./helpers')
+const { IDMClient } = require('../../backoffice/idm/index')
+const methodOverride = require('method-override')
 
 module.exports = app => {
 
@@ -38,10 +43,41 @@ module.exports = app => {
     response.renderMarkdownFile(`/modules/${moduleName}/README.md`)
   })
 
-  app.get('/modules/:moduleName/feedback', (request, response, next) => {
-    // console.log('this is our response:::', response.locals)
-    const { moduleName } = request.params
-    response.render('module_feedback', {moduleName})
+  const feedbackParser = bodyParser.urlencoded({extended: true})
+  app.use(bodyParser.json())
+
+  app.use(methodOverride('_method'))
+
+  app.route('/modules/:moduleName/feedback')
+      .get((request, response, next) => {
+        const { moduleName } = request.params
+        const IDM = new IDMClient(request.cookies.lgJWT)
+        const moduleFeedback = { allUsers : [], allReviews: [], userReviews: [] }
+        IDM.getAllUsers()
+          .then(users => {
+            moduleFeedback.allUsers = users
+            return queries.getAllModuleFeedback(response.locals.currentModule.name)
+          })
+          .then(feedback => {
+            moduleFeedback.allReviews = feedback
+            response.render('module_feedback', { moduleName, reviews: createUserReviews(moduleFeedback, request)})
+          })
+      })
+      .post(feedbackParser, (request, response, next) => {
+        commands.addModuleFeedback(
+          response.locals.currentUser.id,
+          response.locals.currentUser.handle,
+          response.locals.currentModule.name,
+          request.body.feedback
+        )
+        .then(() => response.redirect(`/modules/${request.params.moduleName}`))
+      })
+
+  app.use(authorizeDelete)
+
+  app.delete('/modules/:moduleName/feedback/:id',(request, response, next) => {
+    commands.deleteModuleFeedback(request.params.id)
+    .then(() => response.redirect(`/modules/${request.params.moduleName}/feedback`))
   })
 
   app.get('/modules/:moduleName/*', (request, response, next) => {

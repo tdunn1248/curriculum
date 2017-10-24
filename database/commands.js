@@ -38,7 +38,27 @@ const uncheckSkill = (userId, skillId, referrer) =>
   ])
 
 
+
+const addModuleFeedback = (user_id, user_handle, module_name, feedback_text) =>
+  knex
+    .insert({ user_id, user_handle, module_name, feedback_text })
+    .into('module_feedback')
+
+const deleteModuleFeedback = reviewId =>
+  knex('module_feedback')
+    .where('id', reviewId)
+    .del()
+
+const getReviewById = reviewId =>
+  knex('module_feedback')
+    .select('*')
+    .where('id', reviewId)
+
 module.exports = {
   checkSkill,
   uncheckSkill,
+  setSkillCheck,
+  addModuleFeedback,
+  deleteModuleFeedback,
+  getReviewById
 }

@@ -44,6 +44,7 @@
     "jade": "^1.11.0",
     "knex": "^0.13.0",
     "marked": "^0.3.6",
+    "method-override": "^2.3.10",
     "moment": "^2.18.1",
     "newrelic": "^2.0.0",
     "node-fetch": "^1.7.3",

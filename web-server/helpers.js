@@ -144,7 +144,6 @@ module.exports = app => {
         const title = getTitleFromHTML(content)
 
         const titleUrlPath = response.path.replace(/\s/, '-')
-        console.log('thi sis my titleUrlPath:::', request.params.moduleName)
 
         const file = {
           content,
@@ -153,7 +152,6 @@ module.exports = app => {
           sourceUrl: 'https://github.com/GuildCrafts/curriculum/blob/master'+path,
           editeUrl: 'https://github.com/GuildCrafts/curriculum/edit/master'+path,
         }
-        console.log('LOL filename:::', typeof title)
         response.render('markdown', file)
       })
     }

@@ -3,8 +3,6 @@ if (location.pathname.match(/^\/modules\//)) {
   const addCheckboxesToSkillsListMembers = () => {
     const skills = JSON.parse($('.skills-data').val() || '[]')
 
-    // HACK encoding fix
-    // jQuery seems to decode & encoded characters but leaves html intact. weird
     skills.forEach(skill => {
       skill.html = $('<div>').html(skill.html).html()
     })
@@ -27,4 +25,5 @@ if (location.pathname.match(/^\/modules\//)) {
   }
 
   $(addCheckboxesToSkillsListMembers)
+
 }

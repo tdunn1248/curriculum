@@ -2,11 +2,29 @@ extends layout
 
 block content
   .feedback-container
-    h3 #{moduleName.replace(/-/g, ' ')}
-    form.form-group(action="/modules/#{moduleName}" method="POST")
-      textarea.form-control.feedback-textarea(rows="10" required)
+    h3.feedback-h3 #{moduleName.replace(/-/g, ' ')}
+    form.feedback-form.form-group(action="/modules/#{moduleName}/feedback" method="POST")
+      textarea.form-control.feedback-textarea(rows="10" name='feedback' placeholder='Tell us how you really feel...' required)
       br
       button.btn.btn-primary(type="submit") Submit
       br
-  h3 recent feedback
-  ul 
+  h3.feedback-h3 Recent Feedback
+  div.recent-reviews-container
+    if (reviews.length === 0) 
+      p.no-reviews No feedback yet...Help us improve this module by giving your feedback above
+    else 
+    each review in reviews 
+      .feedback-user-review.container 
+        .row
+          .user-avatar
+            img(src=review.avatar)
+          .col-1.user-handle
+            span.user-handle= review.handle 
+            span.label Date-posted:
+            span.date-posted #{review.datePosted.month} #{review.datePosted.time}
+          .col-5.user-feedback-content
+            if review.isAuthorizedToDelete
+              form(action='/modules/#{moduleName}/feedback/#{review.reviewId}?_method=DELETE' method='post' )
+                span.feedback-content= review.content
+                .delete-review-contain
+                  button(type='submit' class='glyphicon glyphicon-trash') 
